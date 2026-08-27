@@ -3,3 +3,4 @@ venv/
 .env
 transactions_data/
 __pycache__/
+*.log
