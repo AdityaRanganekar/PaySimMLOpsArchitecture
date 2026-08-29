@@ -6,4 +6,5 @@ certifi
 scikit-learn
 pyaml
 xgboost
+mlflow
 ##-e .

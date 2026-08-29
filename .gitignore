@@ -5,3 +5,5 @@ transactions_data/
 __pycache__/
 *.log
 Artifacts/
+mlruns
+mlflow.db

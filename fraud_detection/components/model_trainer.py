@@ -13,6 +13,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
+import mlflow
+
 
 class ModelTrainer:
     def __init__(self, data_transformation_artifact:DataTransformationArtifact, model_trainer_config:ModelTrainerConfig):
@@ -21,6 +23,26 @@ class ModelTrainer:
             self.data_transformation_artifact=data_transformation_artifact
         except Exception as e:
             raise FraudDetectionException(e,sys)
+
+        
+    def track_mlflow(self, best_model, train_metric, test_metric):
+        with mlflow.start_run():
+            # Log Training Metrics
+            mlflow.log_metric("train_f1_score", train_metric.f1_score)
+            mlflow.log_metric("train_precision", train_metric.precision_score)
+            mlflow.log_metric("train_recall", train_metric.recall_score)
+
+            # Log Testing Metrics
+            mlflow.log_metric("test_f1_score", test_metric.f1_score)
+            mlflow.log_metric("test_precision", test_metric.precision_score)
+            mlflow.log_metric("test_recall", test_metric.recall_score)
+
+            mlflow.sklearn.log_model(
+                sk_model=best_model, 
+                artifact_path="model", 
+                skops_trusted_types=["xgboost.core.Booster", "xgboost.sklearn.XGBClassifier"]
+            )
+
 
 
     def train_model(self, X_train, y_train, X_test, y_test):
@@ -69,12 +91,13 @@ class ModelTrainer:
             raise Exception("No best model found. All models performed below the expected accuracy threshold.")
 
         
-        y_train_pred=best_model.predict(X_train)
+        y_train_pred = best_model.predict(X_train)
+        classification_train_metric = get_classification_score(y_train, y_train_pred)
 
-        classification_train_metric= get_classification_score(y_train, y_train_pred)
+        y_test_pred = best_model.predict(X_test)
+        classification_test_metric = get_classification_score(y_test, y_test_pred)
 
-        y_test_pred=best_model.predict(X_test)
-        classification_test_metric=get_classification_score(y_test, y_test_pred)
+        self.track_mlflow(best_model, classification_train_metric, classification_test_metric)
 
         preprocessor = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
             
@@ -84,10 +107,12 @@ class ModelTrainer:
         fraud_model_obj = FraudDetectionModel(preprocessor, best_model)
         save_object(self.model_trainer_config.trained_model_file_path,obj=fraud_model_obj)
 
-        model_trainer_artifact = ModelTrainerArtifact(trained_model_file_path = self.model_trainer_config.trained_model_file_path,
-                             train_metric_artifact = classification_train_metric,
-                             test_metric_artifact = classification_test_metric
-                             )
+        model_trainer_artifact = ModelTrainerArtifact(
+            trained_model_file_path = self.model_trainer_config.trained_model_file_path,
+            train_metric_artifact = classification_train_metric,
+            test_metric_artifact = classification_test_metric
+        )
+        
         logging.info(f"Model trainer artifact: {model_trainer_artifact}")
         return model_trainer_artifact
 
