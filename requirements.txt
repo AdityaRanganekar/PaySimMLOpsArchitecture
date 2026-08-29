@@ -5,5 +5,5 @@ pymongo
 certifi
 scikit-learn
 pyaml
-
+xgboost
 ##-e .
