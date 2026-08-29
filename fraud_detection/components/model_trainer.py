@@ -40,7 +40,7 @@ class ModelTrainer:
 
             mlflow.sklearn.log_model(
                 sk_model=best_model, 
-                artifact_path="model", 
+                name="model", 
                 skops_trusted_types=["xgboost.core.Booster", "xgboost.sklearn.XGBClassifier"]
             )
 
@@ -108,7 +108,7 @@ class ModelTrainer:
         fraud_model_obj = FraudDetectionModel(preprocessor, best_model)
         save_object(self.model_trainer_config.trained_model_file_path,obj=fraud_model_obj)
 
-        save_object("final_model.pkl", best_model)
+        save_object("final_model/model.pkl", best_model)
 
         model_trainer_artifact = ModelTrainerArtifact(
             trained_model_file_path = self.model_trainer_config.trained_model_file_path,
