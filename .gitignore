@@ -4,3 +4,4 @@ venv/
 transactions_data/
 __pycache__/
 *.log
+Artifacts/
