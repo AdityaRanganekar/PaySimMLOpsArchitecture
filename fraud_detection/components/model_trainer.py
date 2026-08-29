@@ -14,7 +14,8 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
 import mlflow
-
+import dagshub
+dagshub.init(repo_owner='AdityaRanganekar', repo_name='PaySimMLOpsArchitecture', mlflow=True)
 
 class ModelTrainer:
     def __init__(self, data_transformation_artifact:DataTransformationArtifact, model_trainer_config:ModelTrainerConfig):
@@ -106,6 +107,8 @@ class ModelTrainer:
 
         fraud_model_obj = FraudDetectionModel(preprocessor, best_model)
         save_object(self.model_trainer_config.trained_model_file_path,obj=fraud_model_obj)
+
+        save_object("final_model.pkl", best_model)
 
         model_trainer_artifact = ModelTrainerArtifact(
             trained_model_file_path = self.model_trainer_config.trained_model_file_path,

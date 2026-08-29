@@ -1,7 +1,10 @@
 venv/
 .vscode/
 .env
-transactions_data/
+transactions_data/*.csv
+.dvc/config.local
+.dvc/cache/
+.dvc/tmp/
 __pycache__/
 *.log
 Artifacts/

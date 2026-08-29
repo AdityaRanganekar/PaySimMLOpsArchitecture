@@ -1,0 +1,10 @@
+venv/
+.env
+.vscode/
+Artifacts/
+final_model/
+logs/
+*.log
+mlruns/
+mlflow.db
+__pycache__/
