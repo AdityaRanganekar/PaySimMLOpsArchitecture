@@ -11,3 +11,5 @@ Artifacts/
 mlruns
 mlflow.db
 final_model/
+valid_data/
+prediction_output/

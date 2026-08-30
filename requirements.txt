@@ -9,4 +9,7 @@ xgboost
 mlflow
 dagshub
 dvc
+fastapi
+uvicorn
+python-multipart
 ##-e .
