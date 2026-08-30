@@ -10,3 +10,6 @@ mlflow.db
 __pycache__/
 valid_data/
 prediction_output/
+*.pyc
+.git/
+.gitignore

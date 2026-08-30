@@ -13,3 +13,7 @@ mlflow.db
 final_model/
 valid_data/
 prediction_output/
+logs/
+*.pyc
+*.pkl
+.DS_Store
