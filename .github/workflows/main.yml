@@ -85,7 +85,7 @@ jobs:
          
       - name: Stop and remove container if running
         run: |
-          docker ps -q --filter "name=paysimfrauddeetection" | grep -q . && docker stop paysimfrauddeetection && docker rm -fv paysimfrauddeetection
+          docker rm -f paysimfrauddeetection || true
        
       - name: Run Docker Image to serve users
         env:
