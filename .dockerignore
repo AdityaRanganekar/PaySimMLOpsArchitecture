@@ -7,8 +7,6 @@ valid_data/
 prediction_output/
 Artifacts/
 logs/
-final_model/
-*.pkl
 push_data.py
 generate_batch_data.py
 .git/
