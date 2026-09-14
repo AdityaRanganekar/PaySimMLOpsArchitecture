@@ -42,7 +42,6 @@ class DataIngestion:
             df_fraud = pd.DataFrame(list(fraud_cursor))
             
             # Gets a random sample of Normal transactions (e.g., 200,000 rows)
-            # This prevents your PC from crashing while providing enough data to train.
             logging.info("Extracting a sample of 200,000 normal records...")
             normal_cursor = collection.aggregate([
                 { "$match": { "isFraud": 0 } },
